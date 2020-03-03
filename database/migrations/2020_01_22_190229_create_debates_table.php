@@ -15,7 +15,7 @@ class CreateDebatesTable extends Migration
     {
         Schema::create('debates', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('title')->index();
+            $table->string('title', 767)->index();
             $table->char('slug', 255)->unique();
             $table->char('type', 255)->index();
             // authority

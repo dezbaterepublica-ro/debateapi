@@ -14,10 +14,9 @@ class CreateCountiesTable extends Migration
     public function up()
     {
         Schema::create('counties', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->unsignedBigInteger('id')->primary();
             $table->char('name', 255)->unique();
-            $table->char('slug', 255)->unique();
-            $table->char('siruta', 255)->unique();
+            $table->char('type', 255)->index();
             $table->timestamps();
         });
     }
