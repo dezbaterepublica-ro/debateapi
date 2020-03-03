@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get(
+    '/',
+    function () {
+        return view('welcome');
+    }
+);
+Route::resource('debate', 'Unauthenticated\DebateController', ['only' => ['index', 'show']]);
+Route::resource('authority', 'Unauthenticated\AuthorityController', ['only' => ['index', 'show']]);
+Route::resource('city', 'Unauthenticated\CityController', ['only' => ['index', 'show']]);
+Route::resource('county', 'Unauthenticated\CountyController', ['only' => ['index', 'show']]);
