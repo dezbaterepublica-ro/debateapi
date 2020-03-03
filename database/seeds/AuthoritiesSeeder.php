@@ -34,7 +34,7 @@ class AuthoritiesSeeder extends \Illuminate\Database\Seeder
             $authority->save();
         }
 
-        $cities = \App\City::all();
+        $cities = \App\City::inRandomOrder()->limit(30)->get();
         foreach ($cities as $city) {
             $authority = new \App\Authority();
             $authority->name = 'Consiliul Local ' . $city->name . ', ' . $city->county->name;
