@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\JsonPrettifyMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -20,7 +21,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
-
     /**
      * The application's route middleware groups.
      *
@@ -42,7 +42,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
-
     /**
      * The application's route middleware.
      *
@@ -61,8 +60,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'json.pretty' => JsonPrettifyMiddleware::class,
     ];
-
     /**
      * The priority-sorted list of middleware.
      *

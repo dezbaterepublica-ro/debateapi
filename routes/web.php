@@ -17,7 +17,7 @@ Route::get(
         return view('welcome');
     }
 );
-Route::resource('debate', 'Unauthenticated\DebateController', ['only' => ['index', 'show']]);
-Route::resource('authority', 'Unauthenticated\AuthorityController', ['only' => ['index', 'show']]);
-Route::resource('city', 'Unauthenticated\CityController', ['only' => ['index', 'show']]);
-Route::resource('county', 'Unauthenticated\CountyController', ['only' => ['index', 'show']]);
+Route::resource('debate', 'Unauthenticated\DebateController', ['only' => ['index', 'show']])->middleware('json.pretty');
+Route::resource('authority', 'Unauthenticated\AuthorityController', ['only' => ['index', 'show']])->middleware('json.pretty');
+Route::resource('city', 'Unauthenticated\CityController', ['only' => ['index', 'show']])->middleware('json.pretty');
+Route::resource('county', 'Unauthenticated\CountyController', ['only' => ['index', 'show']])->middleware('json.pretty');
