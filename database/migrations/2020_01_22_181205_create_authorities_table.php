@@ -17,9 +17,9 @@ class CreateAuthoritiesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name', 767)->index();
             $table->char('slug', 255)->unique();
-            $table->unsignedBigInteger('county_id')->nullable();
+            $table->unsignedBigInteger('county_id')->nullable()->index();
             $table->foreign('county_id')->references('id')->on('counties');
-            $table->unsignedBigInteger('city_id')->nullable();
+            $table->unsignedBigInteger('city_id')->nullable()->index();
             $table->foreign('city_id')->references('id')->on('cities');
 
             $table->timestamps();

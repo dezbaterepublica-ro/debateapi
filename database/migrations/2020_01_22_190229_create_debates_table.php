@@ -22,12 +22,14 @@ class CreateDebatesTable extends Migration
             $table->dateTime('end_date')->index()->nullable();
             $table->mediumText('description')->nullable();
             $table->text('url')->nullable();
-            $table->bigInteger('interest')->default(1);
+            $table->bigInteger('interest')->default(1)->index();
 
-            $table->unsignedBigInteger('authority_id')->nullable();
+            $table->unsignedBigInteger('authority_id')->nullable()->index();
             $table->foreign('authority_id')->references('id')->on('authorities');
 
             $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
             $table->softDeletes();
         });
     }
