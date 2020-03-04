@@ -9,7 +9,12 @@ class AuthorityController extends Controller
 {
     public function index()
     {
-        return Authority::all();
+        $httpRequest = request();
+
+        $entities = Authority::paginate($httpRequest->per_page);
+        $entities->appends($httpRequest->query());
+
+        return $entities;
     }
 
     public function show($id)

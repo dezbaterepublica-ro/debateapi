@@ -9,7 +9,12 @@ class CountyController extends Controller
 {
     public function index()
     {
-        return County::all();
+        $httpRequest = request();
+
+        $entities = County::paginate($httpRequest->per_page);
+        $entities->appends($httpRequest->query());
+
+        return $entities;
     }
 
     public function show($id)

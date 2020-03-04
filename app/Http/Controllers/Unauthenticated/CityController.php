@@ -9,7 +9,12 @@ class CityController extends Controller
 {
     public function index()
     {
-        return City::all();
+        $httpRequest = request();
+
+        $entities = City::paginate($httpRequest->per_page);
+        $entities->appends($httpRequest->query());
+
+        return $entities;
     }
 
     public function show($id)

@@ -9,7 +9,12 @@ class DebateController extends Controller
 {
     public function index()
     {
-        return Debate::all();
+        $httpRequest = request();
+
+        $entities = Debate::paginate($httpRequest->per_page);
+        $entities->appends($httpRequest->query());
+
+        return $entities;
     }
 
     public function show($id)
