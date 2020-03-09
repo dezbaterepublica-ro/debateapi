@@ -26,8 +26,25 @@ class Controller extends BaseController
         $resourceName = Str::singular($query->getModel()->getTable());
 
         // Sorting
-        if (!empty($httpRequest->sort) && in_array($httpRequest->sort, $sortableBy)) {
-            $query->orderBy($httpRequest->sort);
+        if (!empty($httpRequest->sort)) {
+            $sortParameters = explode(',', $httpRequest->sort);
+            foreach ($sortParameters as $sortParameter) {
+                $orderTypeFlag = substr($sortParameter, 0, 1);
+                switch ($orderTypeFlag) {
+                    case '+':
+                        $sortType = 'ASC';
+                        $sortingBy = substr($sortParameter, 1);
+                    break;
+                    case '-':
+                        $sortType = 'DESC';
+                        $sortingBy = substr($sortParameter, 1);
+                    break;
+                    default:
+                        $sortType = 'ASC';
+                        $sortingBy = $sortParameter;
+                }
+                $query->orderBy($sortingBy, $sortType);
+            }
         }
 
         // Required fields
