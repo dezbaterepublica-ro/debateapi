@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    const SORTABLE_BY = ['id', 'name', 'slug', 'type', 'county_id'];
+    const CAN_SELECT = ['id', 'name', 'type', 'coords', 'county_id'];
+    const SORTABLE_BY = ['id', 'name', 'type', 'county_id'];
 
     public function county()
     {

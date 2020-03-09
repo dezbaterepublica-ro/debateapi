@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Authority extends Model
 {
+    const CAN_SELECT = ['id', 'name', 'slug', 'county_id', 'city_id'];
     const SORTABLE_BY = ['id', 'name', 'slug', 'county_id', 'city_id'];
 
     public function county()
