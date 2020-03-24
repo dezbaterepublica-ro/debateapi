@@ -26,7 +26,17 @@ class CountiesCitiesSeeder extends OctavianParalescu\UatSeeder\UatSeeder
             'coords' => 'coords',
         ];
         $insertChunkSize = 500;
-
         $this->seed($table, $mapping, $insertChunkSize);
+
+        $table = 'sate';
+        $mapping = [
+            'sateSirutaId' => 'id',
+            'countySirutaId' => 'county_id',
+            'sirutaId' => 'city_id',
+            'sateLabel' => 'name',
+            'sateCoords' => 'coords',
+        ];
+
+        $this->seed($table, $mapping, $insertChunkSize, true);
     }
 }

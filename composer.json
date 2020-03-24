@@ -22,6 +22,7 @@
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "octavianparalescu/judete-orase-comune-sectoare-laravel-seeder": "*",
+        "octavianparalescu/laravel-api-controller-methods": "*",
         "phpunit/phpunit": "^8.0"
     },
     "config": {

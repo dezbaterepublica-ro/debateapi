@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Unauthenticated;
 
 use App\Debate;
-use App\Http\Controllers\ApiIndexTrait;
 use App\Http\Controllers\Controller;
-use App\Http\Converters\Http\RequestConverter;
+use OctavianParalescu\ApiController\Controllers\ApiIndexTrait;
+use OctavianParalescu\ApiController\Converters\RequestConverter;
 
 class DebateController extends Controller
 {
