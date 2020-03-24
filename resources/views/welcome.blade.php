@@ -84,6 +84,15 @@
                     Laravel
                 </div>
 
+                @php
+                    $routeList = Route::getRoutes();
+
+    foreach ($routeList as $value)
+    {
+        echo $value->uri().'<br>';
+    }
+@endphp
+
                 <div class="links">
                     <a href="https://laravel.com/docs">Docs</a>
                     <a href="https://laracasts.com">Laracasts</a>
