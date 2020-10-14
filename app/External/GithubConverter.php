@@ -6,6 +6,7 @@ namespace App\External;
 
 use App\External\Settings\AuthorityDetailsSettings;
 use App\External\Settings\AuthorityListSettings;
+use App\External\Settings\CssSelector;
 use App\External\Settings\Url;
 
 class GithubConverter
@@ -17,7 +18,10 @@ class GithubConverter
      */
     public function convertListSettings(array $listItem): AuthorityListSettings
     {
-        return new AuthorityListSettings(new Url($listItem['initial-url']));
+        return new AuthorityListSettings(
+            new Url($listItem['initial-url']),
+            isset($listItem['detail-url-css-selector']) ? new CssSelector($listItem['detail-url-css-selector']) : null
+        );
     }
 
     /**
