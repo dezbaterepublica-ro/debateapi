@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Queue;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ProcessInitialList implements ShouldQueue
@@ -41,13 +42,15 @@ class ProcessInitialList implements ShouldQueue
     {
         $authorityListSettings = $this->initialList->getSettings()
                                                    ->getAuthorityListSettings();
-        $source = $requestHandler->getViewSource($authorityListSettings->getInitialUrl());
-        $crawler = new Crawler($source);
+        $source = $requestHandler->getViewSource(
+            $authorityListSettings->getInitialUrl()
+                                  ->getUrl()
+        );
+        $crawler = new Crawler($source->body());
 
         // Handle pagination to generate further requests
 
         // Handle detail pages
-        /** @noinspection PhpArrayUsedOnlyForWriteInspection */
         $detailUrlPages = [];
         if ($authorityListSettings->getDetailUrlCssSelector()) {
             $detailUrlsElements = $crawler->filter($authorityListSettings->getDetailUrlCssSelector());
@@ -58,5 +61,7 @@ class ProcessInitialList implements ShouldQueue
                 }
             }
         }
+
+        Queue::bulk($detailUrlPages);
     }
 }

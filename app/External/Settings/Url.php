@@ -21,7 +21,7 @@ class Url
     /**
      * @return string
      */
-    public function getLink(): string
+    public function getUrl(): string
     {
         return $this->link;
     }

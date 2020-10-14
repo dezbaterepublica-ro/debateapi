@@ -4,10 +4,10 @@ namespace App\Console\Commands;
 
 use App\External\CategoryOnGithub;
 use App\External\GithubRepository;
+use App\Jobs\InitialList;
+use App\Jobs\ProcessInitialList;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Queue;
-use stdClass;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 class RunParser extends Command
@@ -87,13 +87,11 @@ class RunParser extends Command
                     continue;
                 }
 
-                $queueItem = new stdClass();
-                $queueItem->authority = $authority;
-                $queueItem->authoritySettings = $authoritySettings;
+                $queueItem = new InitialList($authority, $authoritySettings);
 
                 $this->info('Pushing initial url scanning queue job.');
 
-                Queue::pushOn('initial-url-scanning', $queueItem);
+                ProcessInitialList::dispatch($queueItem);
             }
         }
 
