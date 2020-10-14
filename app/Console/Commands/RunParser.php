@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\External\GitHub;
+use App\External\CategoryOnGithub;
+use App\External\GithubRepository;
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use stdClass;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
-use Symfony\Component\Console\Exception\RuntimeException;
 
 class RunParser extends Command
 {
@@ -23,19 +23,19 @@ class RunParser extends Command
      */
     protected $description = 'Runs the debates parser';
     /**
-     * @var GitHub
+     * @var GithubRepository
      */
-    private GitHub $gitHub;
+    private GithubRepository $githubRepository;
 
     /**
      * Create a new command instance.
      *
-     * @param GitHub $gitHub
+     * @param GithubRepository $githubRepository
      */
-    public function __construct(GitHub $gitHub)
+    public function __construct(GithubRepository $githubRepository)
     {
         parent::__construct();
-        $this->gitHub = $gitHub;
+        $this->githubRepository = $githubRepository;
     }
 
     /**
@@ -60,81 +60,42 @@ class RunParser extends Command
     private function listInitialUrls(): int
     {
         // Get the repository
-        $categories = $this->gitHub->getFolder(
-            Config::get('github.organization'),
-            Config::get('github.parsing_reference_repo'),
-        );
-
-        $categories = $categories->filter(
-            function ($category) {
-                return $category['type'] === 'dir';
-            }
-        );
+        $categories = $this->githubRepository->getCategories();
 
         $this->info(
-            'Found ' . count($categories) . ' category in github repository: ' . $categories->pluck('name')
+            'Found ' . count($categories) . ' category in github repository: ' . $categories->implode(',')
         );
 
         // Foreach Categories
+        /** @var CategoryOnGithub $category */
         foreach ($categories as $category) {
-            $authorities = $this->gitHub->getFolder(
-                Config::get('github.organization'),
-                Config::get('github.parsing_reference_repo'),
-                'master',
-                $category['name']
-            );
+            $authorities = $this->githubRepository->getAuthorities($category);
 
             $this->info(
-                'Found ' . count($authorities) . ' authorities for category ' . $category['name'] . ': ' . $authorities->pluck(
-                    'name'
-                )
+                'Found ' . count($authorities) . ' authorities for category ' . $category->getName(
+                ) . ': ' . $authorities->implode(',')
             );
 
             foreach ($authorities as $authority) {
-                // Check if there is a list file
-                $settingsFiles = $this->gitHub->getFolder(
-                    Config::get('github.organization'),
-                    Config::get('github.parsing_reference_repo'),
-                    'master',
-                    "{$category['name']}/{$authority['name']}"
-                );
-
-                $listFile = $settingsFiles->first(
-                    function ($item) {
-                        return $item['name'] === 'list.txt' && $item['type'] === 'file';
-                    }
-                );
-
-                if (!$listFile) {
-                    throw new RuntimeException("Couldn't find a list file for {$category['name']}/{$authority['name']}");
-                } else {
-                    $this->info("Found list file for {$category['name']}/{$authority['name']}");
+                try {
+                    $authoritySettings = $this->githubRepository->getAuthoritySettings($authority);
+                } catch (Exception $e) {
+                    $this->error(
+                        "Could not find settings for {$authority->getCategory()->getName()}/{$authority->getAuthorityName()}"
+                    );
+                    $this->error($e->getMessage());
+                    continue;
                 }
 
-                // Download the settings file
-                $listFileContent = Http::get($listFile['download_url'])
-                                       ->json();
-
-                // Put the initial url and the settings into queue
-                if (empty($listFileContent['initial-url'])) {
-                    throw new RuntimeException("Couldn't find an initial url for {$category['name']}/{$authority['name']}");
-                }
-
-                $queueItem = new \stdClass();
-                $queueItem->category = $category;
+                $queueItem = new stdClass();
                 $queueItem->authority = $authority;
-                $queueItem->listFile = $listFileContent;
+                $queueItem->authoritySettings = $authoritySettings;
 
                 $this->info('Pushing initial url scanning queue job.');
 
                 Queue::pushOn('initial-url-scanning', $queueItem);
             }
         }
-
-
-        // Get the initial url
-
-        // Put the initial url into queue along with the settings
 
         return 0;
     }
