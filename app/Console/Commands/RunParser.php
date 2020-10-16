@@ -89,7 +89,7 @@ class RunParser extends Command
 
                 $queueItem = new InitialList($authority, $authoritySettings);
 
-                $this->info('Pushing initial url scanning queue job.');
+                $this->info('Pushing initial url scanning queue job for ' . $authority->getName());
 
                 ProcessInitialList::dispatch($queueItem);
             }

@@ -4,12 +4,12 @@ namespace App\Jobs;
 
 use App\External\AuthorityRequestHandler;
 use App\External\Settings\Url;
+use DOMElement;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Queue;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ProcessInitialList implements ShouldQueue
@@ -51,17 +51,22 @@ class ProcessInitialList implements ShouldQueue
         // Handle pagination to generate further requests
 
         // Handle detail pages
-        $detailUrlPages = [];
         if ($authorityListSettings->getDetailUrlCssSelector()) {
-            $detailUrlsElements = $crawler->filter($authorityListSettings->getDetailUrlCssSelector());
-            /** @var Crawler $detailUrlsElement */
+            $selector = $authorityListSettings->getDetailUrlCssSelector()
+                                              ->getCssSelector();
+            $detailUrlsElements = $crawler->filter($selector);
+            /** @var DOMElement $detailUrlsElement */
             foreach ($detailUrlsElements as $detailUrlsElement) {
-                if (strtolower($detailUrlsElement->nodeName()) === 'a') {
-                    $detailUrlPages [] = new Url($detailUrlsElement->attr('href'));
+                if (strtolower($detailUrlsElement->tagName) === 'a') {
+                    $detailJob = new Detail(
+                        $this->initialList->getAuthority(),
+                        $this->initialList->getSettings(),
+                        new Url($detailUrlsElement->getAttribute('href'))
+                    );
+                    ProcessDetail::dispatch($detailJob);
                 }
             }
         }
 
-        Queue::bulk($detailUrlPages);
     }
 }
