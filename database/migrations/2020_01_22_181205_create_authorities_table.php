@@ -15,12 +15,28 @@ class CreateAuthoritiesTable extends Migration
     {
         Schema::create('authorities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 767)->index();
-            $table->char('slug', 255)->unique();
-            $table->unsignedBigInteger('county_id')->nullable()->index();
-            $table->foreign('county_id')->references('id')->on('counties');
-            $table->unsignedBigInteger('city_id')->nullable()->index();
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->string('name', 767)
+                  ->index();
+            $table->string('slug', 255)
+                  ->unique();
+            $table->unsignedBigInteger('category_id')
+                  ->nullable()
+                  ->index();
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories');
+            $table->unsignedBigInteger('county_id')
+                  ->nullable()
+                  ->index();
+            $table->foreign('county_id')
+                  ->references('id')
+                  ->on('counties');
+            $table->unsignedBigInteger('city_id')
+                  ->nullable()
+                  ->index();
+            $table->foreign('city_id')
+                  ->references('id')
+                  ->on('cities');
 
             $table->timestamps();
         });

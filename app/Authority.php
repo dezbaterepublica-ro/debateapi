@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Authority extends Model
 {
@@ -22,5 +23,27 @@ class Authority extends Model
     public function debates()
     {
         return $this->hasMany(Debate::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Returns all the categories of the authority,
+     * first is the most specific, last is the least specific
+     * @return Collection
+     */
+    public function categories()
+    {
+        $categories = new Collection();
+        /** @var Category $currentCategory */
+        $currentCategory = $this->category;
+        do {
+            $categories->push($currentCategory);
+        } while ($currentCategory = $currentCategory->parentCategory());
+
+        return $categories;
     }
 }

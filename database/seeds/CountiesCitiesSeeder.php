@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 class CountiesCitiesSeeder extends OctavianParalescu\UatSeeder\UatSeeder
 {

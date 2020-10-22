@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcb66e48e1b6564b0befa24610fb1257",
+    "content-hash": "a03516efa3d142cb8a58f757986cdd04",
     "packages": [
         {
             "name": "brick/math",
@@ -369,6 +369,49 @@
                 "validator"
             ],
             "time": "2020-09-26T15:48:38+00:00"
+        },
+        {
+            "name": "enrise/urihelper",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Enrise/UriHelper.git",
+                "reference": "b43b1ba2d12775339a14359c9b1c7d35cb88bba4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Enrise/UriHelper/zipball/b43b1ba2d12775339a14359c9b1c7d35cb88bba4",
+                "reference": "b43b1ba2d12775339a14359c9b1c7d35cb88bba4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Enrise\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Quist"
+                }
+            ],
+            "description": "A general URI helper class for PHP",
+            "homepage": "https://github.com/Enrise/UriHelper",
+            "keywords": [
+                "collections",
+                "types"
+            ],
+            "time": "2015-04-21T08:40:25+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -7458,7 +7501,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2",
+        "php": "^7.4",
+        "ext-dom": "*",
         "ext-json": "*"
     },
     "platform-dev": [],
